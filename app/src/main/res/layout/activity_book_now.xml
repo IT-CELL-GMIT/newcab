@@ -52,9 +52,9 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:text=""
-                            android:backgroundTint="@color/black"
+                            android:backgroundTint="@color/Yellow"
                             android:background="@drawable/rect_background"
-                            android:textColor="@color/Yellow"
+                            android:textColor="@color/black"
                             android:textSize="18dp">
 
                         </TextView>
@@ -88,8 +88,8 @@
                         android:layout_margin="10dp"
                         android:text=""
                         android:background="@drawable/rect_background"
-                        android:backgroundTint="@color/black"
-                        android:textColor="@color/Yellow"
+                        android:backgroundTint="@color/Yellow"
+                        android:textColor="@color/black"
                         android:textSize="18dp">
 
                     </TextView>
@@ -119,11 +119,11 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="10dp"
                         android:background="@drawable/rect_background"
-                        android:backgroundTint="@color/black"
+                        android:backgroundTint="@color/Yellow"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:text="select"
-                        android:textColor="@color/Yellow"
+                        android:textColor="@color/black"
                         android:textSize="20dp">
 
                     </TextView>
@@ -153,11 +153,11 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="10dp"
                         android:background="@drawable/rect_background"
-                        android:backgroundTint="@color/black"
+                        android:backgroundTint="@color/Yellow"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:text="select"
-                        android:textColor="@color/Yellow"
+                        android:textColor="@color/black"
                         android:textSize="20dp">
 
                     </TextView>
@@ -200,9 +200,9 @@
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:text=""
-                                                android:textColor="@color/Yellow"
+                                                android:textColor="@color/black"
                                                 android:background="@drawable/rect_background"
-                                                android:backgroundTint="@color/black"
+                                                android:backgroundTint="@color/Yellow"
                                                 android:textSize="16dp">
 
                                             </TextView>
@@ -234,9 +234,9 @@
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:text=""
-                                                android:textColor="@color/Yellow"
+                                                android:textColor="@color/black"
                                                 android:background="@drawable/rect_background"
-                                                android:backgroundTint="@color/black"
+                                                android:backgroundTint="@color/Yellow"
                                                 android:textSize="16dp">
 
                                             </TextView>
@@ -267,9 +267,9 @@
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:text=""
-                                                android:textColor="@color/Yellow"
+                                                android:textColor="@color/black"
                                                 android:background="@drawable/rect_background"
-                                                android:backgroundTint="@color/black"
+                                                android:backgroundTint="@color/Yellow"
                                                 android:textSize="16dp">
 
                                             </TextView>
@@ -301,9 +301,9 @@
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:text=""
-                                                android:textColor="@color/Yellow"
+                                                android:textColor="@color/black"
                                                 android:background="@drawable/rect_background"
-                                                android:backgroundTint="@color/black"
+                                                android:backgroundTint="@color/Yellow"
                                                 android:textSize="16dp">
 
                                             </TextView>
@@ -336,9 +336,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=""
-                            android:textColor="@color/Yellow"
+                            android:textColor="@color/black"
                             android:background="@drawable/rect_background"
-                            android:backgroundTint="@color/black"
+                            android:backgroundTint="@color/Yellow"
                             android:textSize="16dp">
 
                         </TextView>
@@ -372,9 +372,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=""
-                            android:textColor="@color/Yellow"
+                            android:textColor="@color/black"
                             android:background="@drawable/rect_background"
-                            android:backgroundTint="@color/black"
+                            android:backgroundTint="@color/Yellow"
                             android:textSize="16dp">
 
                         </TextView>
@@ -406,9 +406,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text=""
-                            android:textColor="@color/Yellow"
+                            android:textColor="@color/black"
                             android:background="@drawable/rect_background"
-                            android:backgroundTint="@color/black"
+                            android:backgroundTint="@color/Yellow"
                             android:textSize="16dp">
 
                         </TextView>
