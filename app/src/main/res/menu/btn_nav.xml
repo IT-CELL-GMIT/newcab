@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/first"
-        android:icon="@drawable/chat"
-        android:title="Chats"/>
+        android:icon="@drawable/baseline_add_location_24"
+        android:title="Map"/>
     <item
         android:id="@+id/second"
         android:icon="@drawable/feed"
-        android:title="Feed"/>
+        android:title="Book"/>
     <item
         android:id="@+id/third"
-        android:icon="@drawable/task"
-        android:title="Tasks"/>
+        android:icon="@drawable/chat"
+        android:title="Chat"/>
     <item
         android:id="@+id/fourth"
-        android:icon="@drawable/horiz"
-        android:title="Menu"/>
+        android:icon="@drawable/baseline_settings_24"
+        android:title="Setting"/>
 </menu>

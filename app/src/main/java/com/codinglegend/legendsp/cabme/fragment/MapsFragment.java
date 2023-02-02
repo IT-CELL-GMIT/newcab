@@ -120,8 +120,12 @@ public class MapsFragment extends Fragment{
             map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(@NonNull Marker clickMarker) {
-                    startActivity(new Intent(context, activity_book_now.class)
-                            .putExtra("cabId", clickMarker.getSnippet()));
+
+                    if (!clickMarker.getTitle().equalsIgnoreCase("My Location")) {
+
+                        startActivity(new Intent(context, activity_book_now.class)
+                                .putExtra("cabId", clickMarker.getSnippet()));
+                    }
                     return false;
                 }
             });
@@ -340,7 +344,7 @@ public class MapsFragment extends Fragment{
                                     options.position(latLng);
                                     options.title(cabOwner);
                                     options.snippet(cab_id);
-//                                    options.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_baseline_directions_car_filled_24));
+                                    options.icon(BitmapDescriptorFactory.fromResource(R.drawable.car2));
 
                                     Marker marker1 = map.addMarker(options);
                                     marker1.showInfoWindow();
