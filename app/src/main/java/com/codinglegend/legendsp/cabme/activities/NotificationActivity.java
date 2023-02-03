@@ -3,10 +3,15 @@ package com.codinglegend.legendsp.cabme.activities;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -21,7 +26,10 @@ import com.codinglegend.legendsp.cabme.R;
 import com.codinglegend.legendsp.cabme.adapters.NotificationAdapter;
 import com.codinglegend.legendsp.cabme.common;
 import com.codinglegend.legendsp.cabme.databinding.ActivityNotificationBinding;
+import com.codinglegend.legendsp.cabme.fragment.CabNotificationsFragment;
+import com.codinglegend.legendsp.cabme.fragment.NotificationFragment;
 import com.codinglegend.legendsp.cabme.models.NotificationModel;
+import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,12 +44,7 @@ public class NotificationActivity extends AppCompatActivity {
 
     private ActivityNotificationBinding binding;
     private Context context;
-
-    List<NotificationModel> list;
-    NotificationAdapter adapter;
-
-    String fetchUserCabsApi = common.getBaseUrl() + "FetchUserCabs.php";
-    String fetchNotificationApi = common.getBaseUrl() + "FetchNotifications.php";
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,158 +52,57 @@ public class NotificationActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_notification);
         context = NotificationActivity.this;
 
-        list = new ArrayList<>();
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new NotificationAdapter(context, list);
-        recyclerView.setAdapter(adapter);
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
-        fetchUserCabs();
+        setUpWithViewPager(binding.viewPager);
+        binding.tabLayout.setupWithViewPager(binding.viewPager);
 
     }
 
-    private void fetchUserCabs() {
+    private void setUpWithViewPager(ViewPager viewPager){
 
-        StringRequest request = new StringRequest(Request.Method.POST, fetchUserCabsApi,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+        NotificationActivity.SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-                        try {
+        adapter.addFragment(new NotificationFragment(), "My Notification");
+        adapter.addFragment(new CabNotificationsFragment(), "Cab Notification");
 
-                            JSONObject jsonObject = new JSONObject(response);
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            String success = jsonObject.getString("success");
-
-                            if (success.equalsIgnoreCase("1")){
-
-                                for (int i=0; i<jsonArray.length(); i++){
-
-                                    JSONObject object = jsonArray.getJSONObject(i);
-
-                                    fetchNotification(object.getString("cab_id"));
-
-                                }
-
-                            }
-
-                        } catch (JSONException e) {
-                            Toast.makeText(context, "format error", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
-            }
-        }){
-            @Nullable
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = new HashMap<>();
-
-                map.put("username", common.getUserName(context));
-
-                return map;
-            }
-        };
-
-        RequestQueue queue = Volley.newRequestQueue(context);
-        queue.add(request);
+        viewPager.setAdapter(adapter);
 
     }
 
-    private void fetchNotification(String cab_id) {
+    private class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        StringRequest request = new StringRequest(Request.Method.POST, fetchNotificationApi,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
 
-                        try {
+        public SectionsPagerAdapter(FragmentManager manager){
 
+            super(manager);
+        }
 
-                            JSONObject jsonObject = new JSONObject(response);
-                            JSONArray jsonArray = jsonObject.getJSONArray("data");
-                            String success = jsonObject.getString("success");
+        @Override
+        public Fragment getItem(int positon){
 
-                            if (success.equalsIgnoreCase("1")){
+            return mFragmentList.get(positon);
+        }
+        @Override
+        public int getCount(){
 
-                                for (int i=0; i<jsonArray.length(); i++){
+            return mFragmentList.size();
 
-                                    JSONObject object = jsonArray.getJSONObject(i);
+        }
+        public void addFragment(Fragment fragment, String title){
 
-                                    if (object.getString("status").equalsIgnoreCase(common.cabRequest)){
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
 
-                                        list.add(new NotificationModel(object.getString("cab_id"),
-                                                "",
-                                                object.getString("username"),
-                                                "Has sent request",
-                                                "",
-                                                "",
-                                                common.cabRequest));
-                                        adapter.notifyDataSetChanged();
+        }
+        @Override
+        public CharSequence getPageTitle(int position){
 
-                                    }else if (object.getString("status").equalsIgnoreCase(common.cabRequestAccept)){
-
-                                        list.add(new NotificationModel(object.getString("cab_id"),
-                                                "",
-                                                object.getString("username"),
-                                                "Cab Request",
-                                                "",
-                                                "",
-                                                common.cabRequestAccept));
-                                        adapter.notifyDataSetChanged();
-
-                                    }else if (object.getString("status").equalsIgnoreCase(common.cabRequestDecline)){
-
-                                        list.add(new NotificationModel(object.getString("cab_id"),
-                                                "",
-                                                object.getString("username"),
-                                                "Cab Request",
-                                                "",
-                                                "",
-                                                common.cabRequestDecline));
-                                        adapter.notifyDataSetChanged();
-
-                                    }else {
-
-                                    }
-
-
-
-
-                                }
-
-                            }
-
-                        } catch (JSONException e) {
-                            Toast.makeText(context, "format error", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
-            }
-        }){
-            @Nullable
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = new HashMap<>();
-
-                map.put("cab_id", cab_id);
-
-                return map;
-            }
-        };
-
-        RequestQueue queue = Volley.newRequestQueue(context);
-        queue.add(request);
-
+            return mFragmentTitleList.get(position);
+        }
     }
+
 
 }
