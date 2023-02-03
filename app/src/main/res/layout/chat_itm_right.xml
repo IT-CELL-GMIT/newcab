@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginEnd="5dp"
+    android:layout_marginBottom="5dp"
+    android:gravity="right"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:text="this is text msg"
+        android:background="@drawable/txt_chat_bg"
+        android:backgroundTint="@color/colorPrimary"
+        android:padding="4dp"
+        android:paddingEnd="12dp"
+        android:paddingStart="12dp"
+        android:layout_marginStart="80dp"
+        android:textColor="@color/icons">
+
+    </TextView>
+
+</LinearLayout>

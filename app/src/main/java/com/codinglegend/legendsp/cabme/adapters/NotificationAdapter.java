@@ -4,10 +4,12 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.codinglegend.legendsp.cabme.R;
+import com.codinglegend.legendsp.cabme.activities.ChatsActivity;
 import com.codinglegend.legendsp.cabme.common;
 import com.codinglegend.legendsp.cabme.models.NotificationModel;
 
@@ -157,6 +160,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         }
 
+        holder.chatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(context, ChatsActivity.class)
+                        .putExtra("username", list.get(position).getFromUsername()));
+            }
+        });
+
     }
 
     private void changeCabRequest(String id, String cabRequestAccept) {
@@ -202,6 +213,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         TextView content, timeDate, senderUsername, freindAcceptText, freindDeclineText, acceptBtn, declineBtn;
         LinearLayout removeNotification, fullLayout, acceptDeclineLL;
+        ImageView chatBtn;
 
         public NotificationHolder(@NonNull View itemView) {
             super(itemView);
@@ -216,6 +228,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             acceptBtn = itemView.findViewById(R.id.tv_accept_freindrequest);
             declineBtn = itemView.findViewById(R.id.tv_decline_friendrequest);
             acceptDeclineLL = itemView.findViewById(R.id.accept_decline_ll);
+            chatBtn = itemView.findViewById(R.id.chatBtn);
 
         }
     }
