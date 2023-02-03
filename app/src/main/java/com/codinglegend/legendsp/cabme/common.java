@@ -75,6 +75,10 @@ public class common {
         progressDialog.dismiss();
     }
 
+    public static String getStrings(Context context, int string_id) {
+        return context.getResources().getString(string_id);
+    }
+
     public static Toast toast;
 
     public static void showToast(Context context, String msg){

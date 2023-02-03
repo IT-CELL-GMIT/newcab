@@ -179,6 +179,8 @@ public class activity_book_now extends AppCompatActivity {
                                     binding.tvNoOfSeats.setText(object.getString("available_space"));
                                     binding.tvType.setText(object.getString("cab_type"));
                                     binding.tvAcNoneAc.setText(object.getString("ac_noneac"));
+                                    binding.tvVehicalType.setText(object.getString("vehical_type"));
+                                    binding.tgvPaymentAmount.setText(object.getString("payment_amount"));
 
                                 }
 

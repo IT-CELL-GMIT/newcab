@@ -1,58 +1,32 @@
 package com.codinglegend.legendsp.cabme;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
 import com.codinglegend.legendsp.cabme.activities.NotificationActivity;
-import com.codinglegend.legendsp.cabme.activities.ShareCabActivity;
 import com.codinglegend.legendsp.cabme.adapters.ShowCabAdapter;
 import com.codinglegend.legendsp.cabme.databinding.ActivityMainBinding;
-import com.codinglegend.legendsp.cabme.fragment.Fourfragment;
 import com.codinglegend.legendsp.cabme.fragment.MapsFragment;
+import com.codinglegend.legendsp.cabme.fragment.MyProfileFragment;
+import com.codinglegend.legendsp.cabme.fragment.SettingsFragment;
 import com.codinglegend.legendsp.cabme.fragment.firstFragment;
 import com.codinglegend.legendsp.cabme.fragment.secondfragment;
-import com.codinglegend.legendsp.cabme.fragment.thirdFragment;
 import com.codinglegend.legendsp.cabme.models.ShowCabModel;
 import com.google.android.material.navigation.NavigationBarView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.microedition.khronos.opengles.GL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -98,8 +72,11 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.third:
                         replacefragment(new secondfragment());
                         break;
+                    case R.id.my_cabs:
+                        replacefragment(new SettingsFragment());
+                        break;
                     case R.id.fourth:
-                        replacefragment(new thirdFragment());
+                        replacefragment(new MyProfileFragment());
                         break;
                 }
 

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +40,10 @@ import com.google.android.gms.tasks.Task;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,13 +53,15 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
     private ActivityShareCabBinding binding;
     private Context context;
 
-    RadioGroup availableSpaceRG, typeRG, acNoneAcRG;
-    RadioButton radioButton1, radioButton2, radioButton3;
+    RadioGroup availableSpaceRG, typeRG, acNoneAcRG, vehicalTypeRG;
+    RadioButton radioButton1, radioButton2, radioButton3, radioButton4;
 
     String startingAddress = "", endingAddress = "", startingTime = "", endingTime = "";
     String cabName = "", cabModel = "", cabDriverMo = "", cabVehicalNum = "";
-    String availableSpace = "", cabType = "", cabAcNoneAc = "";
+    String availableSpace = "", cabType = "", cabAcNoneAc = "", vehicalType = "";
+    String paymentAmount = "";
     String uniqueCabId;
+
 
     Boolean stTimeBoll = false, endTimeBool = false;
 
@@ -65,7 +72,10 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
 
     String addCabApi = common.getBaseUrl() + "addCabToShare.php";
     String updateLocation = common.getBaseUrl() + "CabLocation.php";
+    String updateCabDetails = common.getBaseUrl() + "UpdateCab.php";
+    String fetchCabDetailsApi = common.getBaseUrl() + "FetchCabDetails.php";
 
+    Intent intent;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location lastKnownLocation;
@@ -79,7 +89,6 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
 
     int COUNTER = 0;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,13 +98,23 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
         availableSpaceRG = findViewById(R.id.availableSpaceRG);
         typeRG = findViewById(R.id.typeRG);
         acNoneAcRG = findViewById(R.id.acNoneAcRG);
+        vehicalTypeRG = findViewById(R.id.vehical_type);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
 
 
+        intent = getIntent();
+        if (intent.getStringExtra("cabId") != null){
+            uniqueCabId = intent.getStringExtra("cabId");
+            binding.doneBtn.setText("done");
+            common.showProgressDialog(context, "Please wait");
+            getCabDetails();
+        }
+
         binding.doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 getData();
             }
         });
@@ -119,6 +138,83 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
                 selectStartintTime();
             }
         });
+
+    }
+
+    private void getCabDetails() {
+
+        StringRequest request = new StringRequest(Request.Method.POST, fetchCabDetailsApi,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        common.dismissProgresDialog();
+
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            String success = jsonObject.getString("success");
+
+                            if (success.equalsIgnoreCase("1")){
+
+                                for (int i=0; i<jsonArray.length(); i++){
+
+                                    JSONObject object = jsonArray.getJSONObject(i);
+
+//                                    binding.startingAddress.setText(object.getString("from_address"));
+//                                    binding.endingAddress.setText(object.getString("to_address"));
+//                                    binding.selectStartingTimeBtn.setText(object.getString("starting_time"));
+//                                    binding.selectEndingTimeBtn.setText(object.getString("ending_time"));
+//                                    binding.tvCarName.setText(object.getString("cab_name"));
+//                                    binding.tvCarModel.setText(object.getString("cab_model"));
+//                                    binding.tvDriverContact.setText(object.getString("cab_driver_mo"));
+//                                    binding.tvVehicalNum.setText(object.getString("cab_vehical_no"));
+//                                    binding.tvNoOfSeats.setText(object.getString("available_space"));
+//                                    binding.tvType.setText(object.getString("cab_type"));
+//                                    binding.tvAcNoneAc.setText(object.getString("ac_noneac"));
+//                                    binding.tvVehicalType.setText(object.getString("vehical_type"));
+//                                    binding.tgvPaymentAmount.setText(object.getString("payment_amount"));
+                                    binding.edStartingAddress.setText(object.getString("from_address"));
+                                    binding.endingAddress.setText(object.getString("to_address"));
+                                    binding.selectStartingTimeBtn.setText(object.getString("starting_time"));
+                                    binding.selectEndingTimeBtn.setText(object.getString("ending_time"));
+                                    binding.edCarName.setText(object.getString("cab_name"));
+                                    binding.edCarModel.setText(object.getString("cab_model"));
+                                    binding.edDriverNo.setText(object.getString("cab_driver_mo"));
+                                    binding.edVehicalNo.setText(object.getString("cab_vehical_no"));
+                                    binding.edPaymentAmount.setText(object.getString("payment_amount"));
+                                    startingTime = object.getString("starting_time");
+                                    endingTime = object.getString("ending_time");
+
+                                }
+
+                            }
+
+                        } catch (JSONException e) {
+                            Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<>();
+
+                map.put("cab_id", uniqueCabId);
+
+                return map;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(request);
+
 
     }
 
@@ -154,7 +250,6 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
 
     private void getData() {
 
-
         startingAddress = binding.edStartingAddress.getText().toString().trim();
         endingAddress = binding.endingAddress.getText().toString().trim();
         cabName = binding.edCarName.getText().toString().trim();
@@ -166,10 +261,12 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
         int ID1 = availableSpaceRG.getCheckedRadioButtonId();
         int ID2 = typeRG.getCheckedRadioButtonId();
         int ID3 = acNoneAcRG.getCheckedRadioButtonId();
+        int ID4 = vehicalTypeRG.getCheckedRadioButtonId();
 
         radioButton1 = findViewById(ID1);
         radioButton2 = findViewById(ID2);
         radioButton3 = findViewById(ID3);
+        radioButton4 = findViewById(ID4);
 
         if (startingAddress.length() < 3){
             common.showToast(context, "fill starting address");
@@ -193,17 +290,28 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
             common.showToast(context, "select car type");
         }else if (findViewById(ID3) == null){
             common.showToast(context, "select AC/noneAC");
-        }else {
+        }else if(findViewById(ID4) ==null){
+            common.showToast(context, "select vehical type");
+        }else if (binding.edPaymentAmount.getText().toString().length() < 1){
+            common.showToast(context, "select payment amount");
+        } else {
 
             common.showProgressDialog(context, "Please wait...");
 
             availableSpace = radioButton1.getText().toString();
             cabType = radioButton2.getText().toString();
             cabAcNoneAc = radioButton3.getText().toString();
+            vehicalType = radioButton4.getText().toString();
 
-            uniqueCabId = common.getUserName(context) + "_" + cabName.replace(" ", "") + "_" + String.valueOf(System.currentTimeMillis());
+            paymentAmount = binding.edPaymentAmount.getText().toString().trim();
 
-            shareCab();
+            if (intent.getStringExtra("cabId") != null){
+                changeCabDetails();
+            }else{
+                uniqueCabId = common.getUserName(context) + "_" + cabName.replace(" ", "") + "_" + String.valueOf(System.currentTimeMillis());
+
+                shareCab();
+            }
 
         }
 
@@ -214,6 +322,60 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
 //            radioButton = findViewById(ID);
 //            common.showToast(context, radioButton.getText().toString());
 //        }
+
+    }
+
+    private void changeCabDetails() {
+
+        StringRequest request = new StringRequest(Request.Method.POST, updateCabDetails,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        if (response.equalsIgnoreCase("failed") || response.contains("failed")){
+                            common.showToast(context, response);
+                            finish();
+                        }else {
+                            requestLocation();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                common.dismissProgresDialog();
+                common.showToast(context, "connection error");
+                finish();
+            }
+        }){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                params.put("cab_id", uniqueCabId);
+                params.put("from_address", startingAddress);
+                params.put("to_address", endingAddress);
+                params.put("cab_owner", common.getUserName(context));
+                params.put("status", "ACTIVE");
+                params.put("starting_time", startingTime);
+                params.put("ending_time", endingTime);
+                params.put("cab_name", cabName);
+                params.put("cab_model", cabModel);
+                params.put("cab_driver_mo", cabDriverMo);
+                params.put("cab_vehical_no", cabVehicalNum);
+                params.put("available_space", availableSpace);
+                params.put("cab_type", cabType);
+                params.put("ac_noneac", cabAcNoneAc);
+                params.put("payment", paymentAmount);
+                params.put("vehical_type", vehicalType);
+
+                return params;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(request);
 
     }
 
@@ -259,6 +421,8 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
                 params.put("available_space", availableSpace);
                 params.put("cab_type", cabType);
                 params.put("ac_noneac", cabAcNoneAc);
+                params.put("payment", paymentAmount);
+                params.put("vehical_type", vehicalType);
 
                 return params;
             }
