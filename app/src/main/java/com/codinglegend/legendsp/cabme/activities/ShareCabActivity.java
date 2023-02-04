@@ -53,12 +53,12 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
     private ActivityShareCabBinding binding;
     private Context context;
 
-    RadioGroup availableSpaceRG, typeRG, acNoneAcRG, vehicalTypeRG;
-    RadioButton radioButton1, radioButton2, radioButton3, radioButton4;
+    RadioGroup availableSpaceRG, typeRG, acNoneAcRG, vehicalTypeRG, timesOfTripRG;
+    RadioButton radioButton1, radioButton2, radioButton3, radioButton4, radioButton5;
 
     String startingAddress = "", endingAddress = "", startingTime = "", endingTime = "";
     String cabName = "", cabModel = "", cabDriverMo = "", cabVehicalNum = "";
-    String availableSpace = "", cabType = "", cabAcNoneAc = "", vehicalType = "";
+    String availableSpace = "", cabType = "", cabAcNoneAc = "", vehicalType = "", timesOfTrip = "";
     String paymentAmount = "";
     String uniqueCabId;
 
@@ -99,6 +99,7 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
         typeRG = findViewById(R.id.typeRG);
         acNoneAcRG = findViewById(R.id.acNoneAcRG);
         vehicalTypeRG = findViewById(R.id.vehical_type);
+        timesOfTripRG = findViewById(R.id.timesOfTripRG);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
 
@@ -262,11 +263,13 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
         int ID2 = typeRG.getCheckedRadioButtonId();
         int ID3 = acNoneAcRG.getCheckedRadioButtonId();
         int ID4 = vehicalTypeRG.getCheckedRadioButtonId();
+        int ID5 = timesOfTripRG.getCheckedRadioButtonId();
 
         radioButton1 = findViewById(ID1);
         radioButton2 = findViewById(ID2);
         radioButton3 = findViewById(ID3);
         radioButton4 = findViewById(ID4);
+        radioButton5 = findViewById(ID5);
 
         if (startingAddress.length() < 3){
             common.showToast(context, "fill starting address");
@@ -292,6 +295,8 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
             common.showToast(context, "select AC/noneAC");
         }else if(findViewById(ID4) ==null){
             common.showToast(context, "select vehical type");
+        }else if(findViewById(ID5) == null){
+            common.showToast(context, "select times of tirp");
         }else if (binding.edPaymentAmount.getText().toString().length() < 1){
             common.showToast(context, "select payment amount");
         } else {
@@ -302,6 +307,7 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
             cabType = radioButton2.getText().toString();
             cabAcNoneAc = radioButton3.getText().toString();
             vehicalType = radioButton4.getText().toString();
+            timesOfTrip = radioButton5.getText().toString();
 
             paymentAmount = binding.edPaymentAmount.getText().toString().trim();
 
@@ -369,6 +375,7 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
                 params.put("ac_noneac", cabAcNoneAc);
                 params.put("payment", paymentAmount);
                 params.put("vehical_type", vehicalType);
+                params.put("times_of_trip", timesOfTrip);
 
                 return params;
             }
@@ -423,6 +430,7 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
                 params.put("ac_noneac", cabAcNoneAc);
                 params.put("payment", paymentAmount);
                 params.put("vehical_type", vehicalType);
+                params.put("times_of_trip", timesOfTrip);
 
                 return params;
             }

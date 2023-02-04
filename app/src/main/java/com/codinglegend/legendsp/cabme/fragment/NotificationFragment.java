@@ -103,7 +103,7 @@ public class NotificationFragment extends Fragment {
         RecyclerView recyclerView = binding.getRoot().findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new NotificationAdapter(context, list);
+        adapter = new NotificationAdapter(context, list, "NotificaionFragment");
         recyclerView.setAdapter(adapter);
 
         fetchUserCabs();
@@ -130,7 +130,8 @@ public class NotificationFragment extends Fragment {
 
                                     JSONObject object = jsonArray.getJSONObject(i);
 
-                                    fetchNotification(object.getString("cab_id"));
+                                    fetchNotification(object.getString("cab_id"), object.getString("from_address") + " to " +
+                                            object.getString("to_address"));
 
                                 }
 
@@ -163,7 +164,7 @@ public class NotificationFragment extends Fragment {
 
     }
 
-    private void fetchNotification(String cab_id) {
+    private void fetchNotification(String cab_id, String address) {
 
         StringRequest request = new StringRequest(Request.Method.POST, fetchNotificationApi,
                 new Response.Listener<String>() {
@@ -191,7 +192,8 @@ public class NotificationFragment extends Fragment {
                                                 "Has sent request",
                                                 "",
                                                 "",
-                                                common.cabRequest));
+                                                common.cabRequest,
+                                                address));
                                         adapter.notifyDataSetChanged();
 
                                     }else if (object.getString("status").equalsIgnoreCase(common.cabRequestAccept)){
@@ -202,7 +204,8 @@ public class NotificationFragment extends Fragment {
                                                 "Cab Request",
                                                 "",
                                                 "",
-                                                common.cabRequestAccept));
+                                                common.cabRequestAccept,
+                                                address));
                                         adapter.notifyDataSetChanged();
 
                                     }else if (object.getString("status").equalsIgnoreCase(common.cabRequestDecline)){
@@ -213,7 +216,8 @@ public class NotificationFragment extends Fragment {
                                                 "Cab Request",
                                                 "",
                                                 "",
-                                                common.cabRequestDecline));
+                                                common.cabRequestDecline,
+                                                address));
                                         adapter.notifyDataSetChanged();
 
                                     }else {

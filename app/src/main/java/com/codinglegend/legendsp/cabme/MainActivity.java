@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import com.codinglegend.legendsp.cabme.activities.NotificationActivity;
 import com.codinglegend.legendsp.cabme.adapters.ShowCabAdapter;
 import com.codinglegend.legendsp.cabme.databinding.ActivityMainBinding;
+import com.codinglegend.legendsp.cabme.fragment.ActiveCabsFragment;
 import com.codinglegend.legendsp.cabme.fragment.MapsFragment;
 import com.codinglegend.legendsp.cabme.fragment.MyProfileFragment;
 import com.codinglegend.legendsp.cabme.fragment.SettingsFragment;
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                         replacefragment(new secondfragment());
                         break;
                     case R.id.my_cabs:
-                        replacefragment(new SettingsFragment());
+                        replacefragment(new ActiveCabsFragment());
                         break;
                     case R.id.fourth:
                         replacefragment(new MyProfileFragment());

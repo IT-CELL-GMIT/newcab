@@ -135,7 +135,8 @@ public class SettingsFragment extends Fragment {
                                             object.getString("from_address"),
                                             object.getString("to_address"),
                                             object.getString("starting_time") + " to " + object.getString("ending_time"),
-                                            common.getUserName(context)));
+                                            common.getUserName(context),
+                                            "none"));
                                     cabAdapter.notifyDataSetChanged();
 
                                 }

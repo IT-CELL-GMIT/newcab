@@ -167,7 +167,8 @@ View view;
                                             object.getString("from_address"),
                                             object.getString("to_address"),
                                             object.getString("starting_time") + " to " + object.getString("ending_time"),
-                                            object.getString("cab_owner")));
+                                            object.getString("cab_owner"),
+                                            "none"));
 
                                     cabAdapter.notifyDataSetChanged();
 
@@ -246,44 +247,6 @@ View view;
         String permission = Manifest.permission.ACCESS_FINE_LOCATION;
         int res = getActivity().checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
-
-    }
-
-    private void getDummyCabs() {
-
-        cabList = new ArrayList<>();
-        cabCheck = new ArrayList<>();
-        RecyclerView showCabRecyclerview = view.findViewById(R.id.shareCabRecyclerview);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-        showCabRecyclerview.setLayoutManager(layoutManager);
-        cabAdapter = new ShowCabAdapter(cabList, context, "firstFragment");
-        showCabRecyclerview.setAdapter(cabAdapter);
-
-        cabList.add(new ShowCabModel("1",
-                "Bhavnagar",
-                "Ahemdabad",
-                "55-55-5555 55:55 to 66-66-6666 66:66",
-                "Tanishq"));
-
-        cabList.add(new ShowCabModel("2",
-                "Rajkot",
-                "Katch",
-                "55-55-5555 55:55 to 66-66-6666 66:66",
-                "Pandey"));
-
-        cabList.add(new ShowCabModel("3",
-                "Dang",
-                "Bhavena",
-                "55-55-5555 55:55 to 66-66-6666 66:66",
-                "Hamza"));
-
-        cabList.add(new ShowCabModel("4",
-                "Bhavanagar",
-                "Bombay",
-                "55-55-5555 55:55 to 66-66-6666 66:66",
-                "Zala"));
-
-        cabAdapter.notifyDataSetChanged();
 
     }
 

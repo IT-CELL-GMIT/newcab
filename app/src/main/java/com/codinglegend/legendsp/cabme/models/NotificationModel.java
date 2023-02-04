@@ -8,9 +8,10 @@ public class NotificationModel {
     content,
     isSeen,
     isDisabled,
-    type;
+    type,
+    address;
 
-    public NotificationModel(String id, String timeDate, String fromUsername, String content, String isSeen, String isDisabled, String type) {
+    public NotificationModel(String id, String timeDate, String fromUsername, String content, String isSeen, String isDisabled, String type, String address) {
         this.id = id;
         this.timeDate = timeDate;
         this.fromUsername = fromUsername;
@@ -18,6 +19,15 @@ public class NotificationModel {
         this.isSeen = isSeen;
         this.isDisabled = isDisabled;
         this.type = type;
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getId() {

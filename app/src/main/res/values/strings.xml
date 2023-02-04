@@ -8,4 +8,8 @@
     <string name="car">Car</string>
     <string name="cn_error">connection error</string>
 
+    <string name="one_time">OneTimeTrip</string>
+    <string name="one_week">OneWeekDailyTrip</string>
+    <string name="one_month">OneMonthDailyTrip</string>
+
 </resources>

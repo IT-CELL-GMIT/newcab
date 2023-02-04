@@ -7,14 +7,24 @@ public class ShowCabModel {
       cabFromAddress,
       cabToAdress,
       cabTime,
-      cabOwner;
+      cabOwner,
+    cabStatus;
 
-    public ShowCabModel(String cabId, String cabFromAddress, String cabToAdress, String cabTime, String cabOwner) {
+    public ShowCabModel(String cabId, String cabFromAddress, String cabToAdress, String cabTime, String cabOwner, String cabStatus) {
         this.cabId = cabId;
         this.cabFromAddress = cabFromAddress;
         this.cabToAdress = cabToAdress;
         this.cabTime = cabTime;
         this.cabOwner = cabOwner;
+        this.cabStatus = cabStatus;
+    }
+
+    public String getCabStatus() {
+        return cabStatus;
+    }
+
+    public void setCabStatus(String cabStatus) {
+        this.cabStatus = cabStatus;
     }
 
     public String getCabId() {

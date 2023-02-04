@@ -30,6 +30,9 @@ public class common {
     public static String cabRequestAccept = "RequestAccepted";
     public static String cabRequestDecline = "RequestDeclined";
 
+    public static String activeCab = "ACTIVE";
+    public static String inactiveCab = "INACTIVE";
+
     static String MainUrl = "https://pockiest-verses.000webhostapp.com/";
 
     public static String getMainUrl() {

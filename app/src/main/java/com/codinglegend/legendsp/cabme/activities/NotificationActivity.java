@@ -28,6 +28,7 @@ import com.codinglegend.legendsp.cabme.common;
 import com.codinglegend.legendsp.cabme.databinding.ActivityNotificationBinding;
 import com.codinglegend.legendsp.cabme.fragment.CabNotificationsFragment;
 import com.codinglegend.legendsp.cabme.fragment.NotificationFragment;
+import com.codinglegend.legendsp.cabme.fragment.SettingsFragment;
 import com.codinglegend.legendsp.cabme.models.NotificationModel;
 import com.google.android.material.tabs.TabLayout;
 
@@ -63,8 +64,9 @@ public class NotificationActivity extends AppCompatActivity {
 
         NotificationActivity.SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(new NotificationFragment(), "My Notification");
-        adapter.addFragment(new CabNotificationsFragment(), "Cab Notification");
+        adapter.addFragment(new NotificationFragment(), "CAb Notification");
+        adapter.addFragment(new CabNotificationsFragment(), "My Notification");
+        adapter.addFragment(new SettingsFragment(), "My Cabs");
 
         viewPager.setAdapter(adapter);
 

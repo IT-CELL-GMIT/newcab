@@ -1,5 +1,6 @@
 package com.codinglegend.legendsp.cabme.fragment;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -22,10 +23,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.codinglegend.legendsp.cabme.R;
-import com.codinglegend.legendsp.cabme.adapters.NotificationAdapter;
+import com.codinglegend.legendsp.cabme.adapters.ShowCabAdapter;
 import com.codinglegend.legendsp.cabme.common;
-import com.codinglegend.legendsp.cabme.databinding.FragmentCabNotificationsBinding;
-import com.codinglegend.legendsp.cabme.models.NotificationModel;
+import com.codinglegend.legendsp.cabme.databinding.FragmentActiveCabsBinding;
+import com.codinglegend.legendsp.cabme.models.ShowCabModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,20 +39,20 @@ import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link CabNotificationsFragment#newInstance} factory method to
+ * Use the {@link ActiveCabsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CabNotificationsFragment extends Fragment {
+public class ActiveCabsFragment extends Fragment {
 
-    private FragmentCabNotificationsBinding binding;
+    private FragmentActiveCabsBinding binding;
     private Context context;
 
-    String myNotificationApi = common.getBaseUrl() + "fetchUserNotification.php";
-    String fetchCabDetailsApi = common.getBaseUrl() + "FetchCabDetails.php";
+    List<ShowCabModel> cabList;
+    ShowCabAdapter cabAdapter;
+    List<String> cabCheck;
 
-    List<NotificationModel> list;
-    NotificationAdapter adapter;
-    List<String> notiCheck;
+    String userActiveCabsApi = common.getBaseUrl() + "FetchUserActiveCabs.php";
+    String fetchCabDetailsApi = common.getBaseUrl() + "FetchCabDetails.php";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,7 +63,7 @@ public class CabNotificationsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public CabNotificationsFragment() {
+    public ActiveCabsFragment() {
         // Required empty public constructor
     }
 
@@ -72,11 +73,11 @@ public class CabNotificationsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment CabNotificationsFragment.
+     * @return A new instance of fragment ActiveCabsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CabNotificationsFragment newInstance(String param1, String param2) {
-        CabNotificationsFragment fragment = new CabNotificationsFragment();
+    public static ActiveCabsFragment newInstance(String param1, String param2) {
+        ActiveCabsFragment fragment = new ActiveCabsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -97,25 +98,25 @@ public class CabNotificationsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_cab_notifications, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_active_cabs, container, false);
         context = binding.getRoot().getContext();
 
-        list = new ArrayList<>();
-        notiCheck = new ArrayList<>();
-        RecyclerView recyclerView = binding.getRoot().findViewById(R.id.recyclerView);
+        cabList = new ArrayList<>();
+        cabCheck = new ArrayList<>();
+        RecyclerView showCabRecyclerview = binding.getRoot().findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new NotificationAdapter(context, list, "CabNotificationFragment");
-        recyclerView.setAdapter(adapter);
+        showCabRecyclerview.setLayoutManager(layoutManager);
+        cabAdapter = new ShowCabAdapter(cabList, context, "ActiveCabsFragment");
+        showCabRecyclerview.setAdapter(cabAdapter);
 
-        getNotifications();
+        getCabs();
 
-        return  binding.getRoot();
+        return binding.getRoot();
     }
 
-    private void getNotifications() {
+    private void getCabs() {
 
-        StringRequest request = new StringRequest(Request.Method.POST, myNotificationApi,
+        StringRequest request = new StringRequest(Request.Method.POST, userActiveCabsApi,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -146,7 +147,7 @@ public class CabNotificationsFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                common.showToast(context, common.getStrings(context, R.string.cn_error));
+                common.showToast(context, "connection error");
             }
         }){
             @Nullable
@@ -184,48 +185,14 @@ public class CabNotificationsFragment extends Fragment {
 
                                     JSONObject object = jsonArray.getJSONObject(i);
 
-                                    if (status.equalsIgnoreCase(common.cabRequest)){
+                                    cabList.add(new ShowCabModel(cab_id,
+                                            object.getString("from_address"),
+                                            object.getString("to_address"),
+                                            object.getString("starting_time") + " to " + object.getString("ending_time"),
+                                            object.getString("cab_owner"),
+                                            status));
 
-                                        list.add(new NotificationModel(cab_id,
-                                                "",
-                                                object.getString("cab_owner"),
-                                                "You sent cab request {Request is in a queue}",
-                                                "",
-                                                "",
-                                                common.cabRequest,
-                                                object.getString("from_address") + " to " + object.getString("to_address")));
-
-                                        adapter.notifyDataSetChanged();
-
-                                    }else if (status.equalsIgnoreCase(common.cabRequestAccept)){
-
-                                        list.add(new NotificationModel(cab_id,
-                                                "",
-                                                object.getString("cab_owner"),
-                                                "Your cab request has been accepted",
-                                                "",
-                                                "",
-                                                common.cabRequestAccept,
-                                                object.getString("from_address") + " to " + object.getString("to_address")));
-
-                                        adapter.notifyDataSetChanged();
-
-                                    }else if (status.equalsIgnoreCase(common.cabRequestDecline)){
-
-                                        list.add(new NotificationModel(cab_id,
-                                                "",
-                                                object.getString("cab_owner"),
-                                                "Your cab request has been declined",
-                                                "",
-                                                "",
-                                                common.cabRequestDecline,
-                                                object.getString("from_address") + " to " + object.getString("to_address")));
-
-                                        adapter.notifyDataSetChanged();
-
-                                    }else {
-
-                                    }
+                                    cabAdapter.notifyDataSetChanged();
 
 //                                    binding.startingAddress.setText(object.getString("from_address"));
 //                                    binding.endingAddress.setText(object.getString("to_address"));

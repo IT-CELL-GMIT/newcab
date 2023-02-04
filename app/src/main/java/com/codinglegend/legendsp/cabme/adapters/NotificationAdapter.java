@@ -27,6 +27,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.codinglegend.legendsp.cabme.R;
 import com.codinglegend.legendsp.cabme.activities.ChatsActivity;
+import com.codinglegend.legendsp.cabme.activity_book_now;
 import com.codinglegend.legendsp.cabme.common;
 import com.codinglegend.legendsp.cabme.models.NotificationModel;
 
@@ -39,6 +40,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     private Context context;
     private List<NotificationModel> list;
+    String activityName;
 
     ProgressDialog progressDialog;
 
@@ -52,9 +54,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     SharedPreferences sp;
     SharedPreferences.Editor editor;
 
-    public NotificationAdapter(Context context, List<NotificationModel> list) {
+    public NotificationAdapter(Context context, List<NotificationModel> list, String activityName) {
         this.context = context;
         this.list = list;
+        this.activityName = activityName;
     }
 
     @NonNull
@@ -79,84 +82,111 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             holder.senderUsername.setText(list.get(position).getFromUsername());
             holder.content.setText(list.get(position).getContent());
+            holder.address.setText("Trip Address - " + list.get(position).getAddress());
 //
 //            String timeDateSplits[] = list.get(position).getTimeDate().split("xxx");
 //
 //            holder.timeDate.setText(timeDateSplits[0] + " " + timeDateSplits[1]);
             holder.timeDate.setVisibility(View.GONE);
 
-            if (list.get(position).getType().equalsIgnoreCase(common.cabRequest)) {
+            if (activityName.equalsIgnoreCase("NotificaionFragment")){
 
-                holder.acceptDeclineLL.setVisibility(View.VISIBLE);
-
-                holder.acceptBtn.setOnClickListener(new View.OnClickListener() {
+                holder.fullLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        context.startActivity(new Intent(context, activity_book_now.class).putExtra("cabId", list.get(position).getId()));
+                    }
+                });
 
-                        changeCabRequest(list.get(position).getId(), common.cabRequestAccept);
+                if (list.get(position).getType().equalsIgnoreCase(common.cabRequest)) {
 
-                        holder.acceptDeclineLL.setVisibility(View.GONE);
-                        holder.freindAcceptText.setVisibility(View.VISIBLE);
-                        holder.content.setText("Cab Request");
+                    holder.acceptDeclineLL.setVisibility(View.VISIBLE);
+
+                    holder.acceptBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            changeCabRequest(list.get(position).getId(), common.cabRequestAccept, list.get(position).getFromUsername());
+
+                            holder.acceptDeclineLL.setVisibility(View.GONE);
+                            holder.freindAcceptText.setVisibility(View.VISIBLE);
+                            holder.content.setText("Cab Request");
 
 //                        freindRequestAccepted(common.getUserName(context), list.get(position).getFromUsername(), holder);
 
-                    }
-                });
+                        }
+                    });
 
-                holder.declineBtn.setOnClickListener(new View.OnClickListener() {
+                    holder.declineBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            new AlertDialog.Builder(context)
+                                    .setTitle("Friend Request")
+                                    .setMessage("Do you really want to decline freind request?")
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            holder.acceptDeclineLL.setVisibility(View.GONE);
+                                            holder.freindDeclineText.setVisibility(View.VISIBLE);
+                                            changeCabRequest(list.get(position).getId(), common.cabRequestDecline, list.get(position).getFromUsername());
+                                            holder.content.setText("Cab Request");
+//                                        declineFriendRequest(list.get(position).getFromUsername());
+                                        }
+                                    }).setNegativeButton("cancle", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.cancel();
+                                        }
+                                    }).show();
+
+                        }
+                    });
+
+                } else if (list.get(position).getType().equalsIgnoreCase(common.cabRequestAccept)) {
+
+                    holder.freindAcceptText.setVisibility(View.VISIBLE);
+                    holder.acceptDeclineLL.setVisibility(View.GONE);
+
+                } else if (list.get(position).getType().equalsIgnoreCase(common.cabRequestDecline)) {
+
+                    holder.acceptDeclineLL.setVisibility(View.GONE);
+                    holder.freindDeclineText.setVisibility(View.VISIBLE);
+
+                } else {
+                    holder.acceptDeclineLL.setVisibility(View.GONE);
+                    holder.freindAcceptText.setVisibility(View.GONE);
+                    holder.freindDeclineText.setVisibility(View.GONE);
+                }
+
+                holder.removeNotification.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-                        new AlertDialog.Builder(context)
-                                .setTitle("Friend Request")
-                                .setMessage("Do you really want to decline freind request?")
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        holder.acceptDeclineLL.setVisibility(View.GONE);
-                                        holder.freindDeclineText.setVisibility(View.VISIBLE);
-                                        changeCabRequest(list.get(position).getId(), common.cabRequestDecline);
-                                        holder.content.setText("Cab Request");
-//                                        declineFriendRequest(list.get(position).getFromUsername());
-                                    }
-                                }).setNegativeButton("cancle", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.cancel();
-                                    }
-                                }).show();
-
-                    }
-                });
-
-            } else if (list.get(position).getType().equalsIgnoreCase(common.cabRequestAccept)) {
-
-                holder.freindAcceptText.setVisibility(View.VISIBLE);
-                holder.acceptDeclineLL.setVisibility(View.GONE);
-
-            } else if (list.get(position).getType().equalsIgnoreCase(common.cabRequestDecline)) {
-
-                holder.acceptDeclineLL.setVisibility(View.GONE);
-                holder.freindDeclineText.setVisibility(View.VISIBLE);
-
-            } else {
-                holder.acceptDeclineLL.setVisibility(View.GONE);
-                holder.freindAcceptText.setVisibility(View.GONE);
-                holder.freindDeclineText.setVisibility(View.GONE);
-            }
-
-            holder.removeNotification.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
 
 //                    list.remove(position);
 //                    NotificationFragment.getNewNotification(list);
 //
 //                    disableNotification(list.get(position).getFromUsername(), list.get(position).getTimeDate(), list.get(position).getType());
 
-                }
-            });
+                    }
+                });
+
+            }
+            else if (activityName.equalsIgnoreCase("CabNotificationFragment")){
+
+                holder.senderUsername.setText("Cab Owner - " + list.get(position).getFromUsername());
+
+                holder.acceptDeclineLL.setVisibility(View.GONE);
+
+                holder.fullLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        context.startActivity(new Intent(context, activity_book_now.class).putExtra("cabId", list.get(position).getId())
+                                .putExtra("activityName", "CabNotificaionFragment"));
+                    }
+                });
+
+            }
 
         }
 
@@ -170,7 +200,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     }
 
-    private void changeCabRequest(String id, String cabRequestAccept) {
+    private void changeCabRequest(String id, String cabRequestAccept,String userName) {
 
         StringRequest request = new StringRequest(Request.Method.POST, updateRequestApi,
                 new Response.Listener<String>() {
@@ -178,6 +208,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     public void onResponse(String response) {
                         if (response.contains("failed") || response.equalsIgnoreCase("failed")){
                             Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                        }else {
+                            common.showToast(context, response);
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -193,6 +225,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                 map.put("cab_id", id);
                 map.put("status", cabRequestAccept);
+                map.put("username", userName);
 
                 return map;
             }
@@ -211,7 +244,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public class NotificationHolder extends RecyclerView.ViewHolder {
 
-        TextView content, timeDate, senderUsername, freindAcceptText, freindDeclineText, acceptBtn, declineBtn;
+        TextView content, timeDate, senderUsername, freindAcceptText, freindDeclineText, acceptBtn, declineBtn,
+           address;
         LinearLayout removeNotification, fullLayout, acceptDeclineLL;
         ImageView chatBtn;
 
@@ -229,6 +263,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             declineBtn = itemView.findViewById(R.id.tv_decline_friendrequest);
             acceptDeclineLL = itemView.findViewById(R.id.accept_decline_ll);
             chatBtn = itemView.findViewById(R.id.chatBtn);
+            address = itemView.findViewById(R.id.tv_address);
 
         }
     }

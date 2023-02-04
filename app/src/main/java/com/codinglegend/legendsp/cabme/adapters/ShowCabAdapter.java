@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
@@ -78,10 +79,20 @@ public class ShowCabAdapter extends RecyclerView.Adapter<ShowCabAdapter.CabHolde
                 }
             });
 
-        }else if (activityName.equalsIgnoreCase("SettingsFragment")){
+        }
+        else if (activityName.equalsIgnoreCase("SettingsFragment")){
 
-            holder.bookNowBtn.setVisibility(View.GONE);
             holder.settingsLL.setVisibility(View.VISIBLE);
+
+            holder.bookNowBtn.setText("View Details");
+
+            holder.bookNowBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.startActivity(new Intent(context, activity_book_now.class)
+                            .putExtra("cabId", list.get(position).getCabId()));
+                }
+            });
 
             holder.settingsBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -119,6 +130,26 @@ public class ShowCabAdapter extends RecyclerView.Adapter<ShowCabAdapter.CabHolde
                     alert11.show();
                 }
             });
+
+        }
+        else if (activityName.equalsIgnoreCase("ActiveCabsFragment")){
+
+            holder.deleteBtn.setVisibility(View.GONE);
+
+            holder.bookNowBtn.setText("View Details");
+            holder.bookNowBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.startActivity(new Intent(context, activity_book_now.class)
+                            .putExtra("activityName", "CabNotificaionFragment")
+                            .putExtra("cabId", list.get(position).getCabId()));
+                }
+            });
+
+            if (list.get(position).getCabStatus().equalsIgnoreCase(common.inactiveCab)){
+                holder.fullCard.setCardBackgroundColor(context.getResources().getColor(R.color.light));
+                holder.bookNowBtn.setBackgroundColor(context.getResources().getColor(R.color.icons));
+            }
 
         }
 
@@ -207,6 +238,7 @@ public class ShowCabAdapter extends RecyclerView.Adapter<ShowCabAdapter.CabHolde
         Button bookNowBtn;
         LinearLayout settingsLL;
         ImageView settingsBtn, deleteBtn;
+        CardView fullCard;
 
         public CabHolder(@NonNull View itemView) {
             super(itemView);
@@ -218,6 +250,7 @@ public class ShowCabAdapter extends RecyclerView.Adapter<ShowCabAdapter.CabHolde
             settingsBtn = itemView.findViewById(R.id.settingsBtn);
             settingsLL = itemView.findViewById(R.id.settingsLL);
             deleteBtn = itemView.findViewById(R.id.deleteBtn);
+            fullCard = itemView.findViewById(R.id.fullCard);
 
 
         }

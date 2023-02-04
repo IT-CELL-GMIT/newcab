@@ -35,13 +35,15 @@ public class activity_book_now extends AppCompatActivity {
     private ActivityBookNowBinding binding;
     private Context context;
 
-    String cabId;
+    String cabId, fromActiviy;
 
     String fetchCabDetailsApi = common.getBaseUrl() + "FetchCabDetails.php";
     String sendCabRequestApi = common.getBaseUrl() + "RequestCab.php";
 
     Intent mServiceIntent;
     private YourService mYourService;
+
+    String cabOwner = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,15 @@ public class activity_book_now extends AppCompatActivity {
 
         Intent intent = getIntent();
         cabId = intent.getStringExtra("cabId");
+        fromActiviy = intent.getStringExtra("activityName");
+
+        if (fromActiviy != null){
+
+            if (fromActiviy.equalsIgnoreCase("CabNotificaionFragment")){
+                binding.doneBtn.setVisibility(View.GONE);
+            }
+
+        }
 
         getCabDetails();
 
@@ -181,6 +192,13 @@ public class activity_book_now extends AppCompatActivity {
                                     binding.tvAcNoneAc.setText(object.getString("ac_noneac"));
                                     binding.tvVehicalType.setText(object.getString("vehical_type"));
                                     binding.tgvPaymentAmount.setText(object.getString("payment_amount"));
+                                    binding.tvTimesOfTrip.setText(object.getString("times_of_trip"));
+
+                                    cabOwner = object.getString("cab_owner");
+
+                                    if (cabOwner.equals(common.getUserName(context))){
+                                        binding.doneBtn.setVisibility(View.GONE);
+                                    }
 
                                 }
 

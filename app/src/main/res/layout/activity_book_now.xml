@@ -481,6 +481,39 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="4"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Times of Trip : "
+                            android:textColor="@color/primaryTextColor"
+                            android:textSize="16dp">
+
+                        </TextView>
+
+                        <TextView
+                            android:id="@+id/tvTimesOfTrip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:background="@drawable/rect_background"
+                            android:backgroundTint="@color/Yellow"
+                            android:textSize="16dp">
+
+                        </TextView>
+
+                    </LinearLayout>
+
                 </LinearLayout>
 
 
