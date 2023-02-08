@@ -33,13 +33,16 @@ public class common {
     public static String activeCab = "ACTIVE";
     public static String inactiveCab = "INACTIVE";
 
-    static String MainUrl = "https://pockiest-verses.000webhostapp.com/";
+//    static String MainUrl = "https://pockiest-verses.000webhostapp.com/";
+    static String MainUrl = "https://www.zocarro.net/";
+
+//    "https://www.zocarro.net/cab_me/CabLocation.php"
 
     public static String getMainUrl() {
         return MainUrl;
     }
     public static String getBaseUrl() {
-        return MainUrl + "CABME/";
+        return MainUrl + "cab_me/";
     }
 
     public static Bitmap IMAGE_BITMAP;
