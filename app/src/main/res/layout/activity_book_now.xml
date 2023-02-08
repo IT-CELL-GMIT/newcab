@@ -52,7 +52,6 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:text=""
-                            android:backgroundTint="@color/Yellow"
                             android:background="@drawable/rect_background"
                             android:textColor="@color/black"
                             android:textSize="18dp">
@@ -119,7 +118,6 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="10dp"
                         android:background="@drawable/rect_background"
-                        android:backgroundTint="@color/Yellow"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:text="select"
@@ -153,7 +151,6 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_margin="10dp"
                         android:background="@drawable/rect_background"
-                        android:backgroundTint="@color/Yellow"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:text="select"
@@ -202,7 +199,6 @@
                                                 android:text=""
                                                 android:textColor="@color/black"
                                                 android:background="@drawable/rect_background"
-                                                android:backgroundTint="@color/Yellow"
                                                 android:textSize="16dp">
 
                                             </TextView>
@@ -236,7 +232,6 @@
                                                 android:text=""
                                                 android:textColor="@color/black"
                                                 android:background="@drawable/rect_background"
-                                                android:backgroundTint="@color/Yellow"
                                                 android:textSize="16dp">
 
                                             </TextView>
@@ -269,7 +264,6 @@
                                                 android:text=""
                                                 android:textColor="@color/black"
                                                 android:background="@drawable/rect_background"
-                                                android:backgroundTint="@color/Yellow"
                                                 android:textSize="16dp">
 
                                             </TextView>
@@ -303,7 +297,6 @@
                                                 android:text=""
                                                 android:textColor="@color/black"
                                                 android:background="@drawable/rect_background"
-                                                android:backgroundTint="@color/Yellow"
                                                 android:textSize="16dp">
 
                                             </TextView>
@@ -338,7 +331,6 @@
                             android:text=""
                             android:textColor="@color/black"
                             android:background="@drawable/rect_background"
-                            android:backgroundTint="@color/Yellow"
                             android:textSize="16dp">
 
                         </TextView>
@@ -374,7 +366,6 @@
                             android:text=""
                             android:textColor="@color/black"
                             android:background="@drawable/rect_background"
-                            android:backgroundTint="@color/Yellow"
                             android:textSize="16dp">
 
                         </TextView>
@@ -408,7 +399,6 @@
                             android:text=""
                             android:textColor="@color/black"
                             android:background="@drawable/rect_background"
-                            android:backgroundTint="@color/Yellow"
                             android:textSize="16dp">
 
                         </TextView>
@@ -441,7 +431,6 @@
                             android:text=""
                             android:textColor="@color/black"
                             android:background="@drawable/rect_background"
-                            android:backgroundTint="@color/Yellow"
                             android:textSize="16dp">
 
                         </TextView>
@@ -474,7 +463,6 @@
                             android:text=""
                             android:textColor="@color/black"
                             android:background="@drawable/rect_background"
-                            android:backgroundTint="@color/Yellow"
                             android:textSize="16dp">
 
                         </TextView>
@@ -507,7 +495,6 @@
                             android:text=""
                             android:textColor="@color/black"
                             android:background="@drawable/rect_background"
-                            android:backgroundTint="@color/Yellow"
                             android:textSize="16dp">
 
                         </TextView>
@@ -532,7 +519,7 @@
             android:layout_marginRight="50dp"
             android:layout_marginBottom="15dp"
             android:backgroundTint="@color/Yellow"
-            android:text="submit"
+            android:text="Take Lift"
             app:cornerRadius="15dp">
 
         </Button>

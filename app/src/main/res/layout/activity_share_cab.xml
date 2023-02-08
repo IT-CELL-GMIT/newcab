@@ -743,7 +743,7 @@
         android:layout_marginRight="50dp"
         android:layout_marginBottom="15dp"
         android:backgroundTint="@color/Yellow"
-        android:text="submit"
+        android:text="Offer Lift"
         app:cornerRadius="15dp">
 
     </Button>

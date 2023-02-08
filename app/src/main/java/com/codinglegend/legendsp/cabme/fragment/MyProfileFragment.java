@@ -1,14 +1,20 @@
 package com.codinglegend.legendsp.cabme.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.codinglegend.legendsp.cabme.R;
+import com.codinglegend.legendsp.cabme.common;
+import com.codinglegend.legendsp.cabme.databinding.FragmentMyProfileBinding;
+import com.google.android.gms.common.internal.service.Common;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +22,9 @@ import com.codinglegend.legendsp.cabme.R;
  * create an instance of this fragment.
  */
 public class MyProfileFragment extends Fragment {
+
+    private FragmentMyProfileBinding binding;
+    private Context context;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,6 +70,13 @@ public class MyProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_profile, container, false);
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_my_profile, container, false);
+        context = binding.getRoot().getContext();
+
+        binding.username.setText(common.getUserName(context));
+        binding.tvPosition.setText(common.getFullName(context));
+        Glide.with(context).load(common.getProfilePic(context)).into(binding.mainProfilePic);
+
+        return binding.getRoot();
     }
 }
