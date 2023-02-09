@@ -33,10 +33,24 @@ public class common {
     public static String activeCab = "ACTIVE";
     public static String inactiveCab = "INACTIVE";
 
+    public static String userTypeVehicalOwner = "VehicalOwner";
+    public static String userTypeCustomer = "Customer";
+
+    public static String statusPositive = "done";
+    public static String statusNegative = "not done";
+
+    public static String userVerified = "Verified";
+    public static String userNotVerified = "NotVerified";
+
+    public static String car = "Car";
+    public static String bike = "Bike";
+    public static String auto = "Auto";
+    public static String customer = "Customer";
+
 //    static String MainUrl = "https://pockiest-verses.000webhostapp.com/";
     static String MainUrl = "https://www.zocarro.net/";
 
-//    "https://www.zocarro.net/cab_me/CabLocation.php"
+//    "https://www.zocarro.net/cab_me/FetchNearCustomers.php"
 
     public static String getMainUrl() {
         return MainUrl;
@@ -61,6 +75,7 @@ public class common {
     public static String GetExternalStorage(){
         return Environment.getExternalStorageDirectory().getAbsolutePath();
     }
+
 
     public static String GetFullMediaPath(){
         return GetExternalStorage() + "/" + GetDownloadEnvironment() + "/" + GetMediaPath();
@@ -141,6 +156,91 @@ public class common {
 
         editor.putString("password", value);
         editor.apply();
+
+    }
+
+    public static void saveAadharStatus(String value, Context context){
+
+        SharedPreferences sp = context.getSharedPreferences("FILE_NAME", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+
+        editor.putString("aadhar_status", value);
+        editor.apply();
+
+    }
+
+    public static String getAadharStatus(Context context){
+
+        SharedPreferences sp = context.getSharedPreferences("FILE_NAME", Context.MODE_PRIVATE);
+        return sp.getString("aadhar_status", "none");
+
+    }
+
+    public static void saveAadhar(String value, Context context){
+
+        SharedPreferences sp = context.getSharedPreferences("FILE_NAME", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+
+        editor.putString("aadhar", value);
+        editor.apply();
+
+    }
+
+    public static String getAadhar(Context context){
+
+        SharedPreferences sp = context.getSharedPreferences("FILE_NAME", Context.MODE_PRIVATE);
+        return sp.getString("aadhar", "none");
+
+    }
+
+    public static void saveAadharExt(String value, Context context){
+
+        SharedPreferences sp = context.getSharedPreferences("FILE_NAME", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+
+        editor.putString("aadhar_ext", value);
+        editor.apply();
+
+    }
+
+    public static String getAadharExt(Context context){
+
+        SharedPreferences sp = context.getSharedPreferences("FILE_NAME", Context.MODE_PRIVATE);
+        return sp.getString("aadhar_ext", "none");
+
+    }
+
+    public static void saveUserStatus(String value, Context context){
+
+        SharedPreferences sp = context.getSharedPreferences("FILE_NAME", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+
+        editor.putString("user_status", value);
+        editor.apply();
+
+    }
+
+    public static String getUserStatus(Context context){
+
+        SharedPreferences sp = context.getSharedPreferences("FILE_NAME", Context.MODE_PRIVATE);
+        return sp.getString("user_status", "none");
+
+    }
+
+    public static void saveUserType(String value, Context context){
+
+        SharedPreferences sp = context.getSharedPreferences("FILE_NAME", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+
+        editor.putString("user_type", value);
+        editor.apply();
+
+    }
+
+    public static String getUserType(Context context){
+
+        SharedPreferences sp = context.getSharedPreferences("FILE_NAME", Context.MODE_PRIVATE);
+        return sp.getString("user_type", "none");
 
     }
 

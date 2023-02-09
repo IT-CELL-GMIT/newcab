@@ -4,14 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
@@ -30,11 +28,9 @@ import com.codinglegend.legendsp.cabme.common;
 import com.codinglegend.legendsp.cabme.databinding.ActivityShareCabBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -62,7 +58,6 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
     String paymentAmount = "";
     String uniqueCabId;
 
-
     Boolean stTimeBoll = false, endTimeBool = false;
 
     private DatePickerDialog dpd;
@@ -74,6 +69,7 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
     String updateLocation = common.getBaseUrl() + "CabLocation.php";
     String updateCabDetails = common.getBaseUrl() + "UpdateCab.php";
     String fetchCabDetailsApi = common.getBaseUrl() + "FetchCabDetails.php";
+    String addLocationApi = common.getBaseUrl() + "AddLocation.php";
 
     Intent intent;
 
@@ -110,13 +106,29 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
             binding.doneBtn.setText("done");
             common.showProgressDialog(context, "Please wait");
             getCabDetails();
+        }else if (intent.getStringExtra("from") != null){
+
+            if (intent.getStringExtra("from").equalsIgnoreCase("shareLocation")){
+
+                binding.doneBtn.setText("Share Location");
+                binding.cabDetials.setVisibility(View.GONE);
+                binding.startingTIme.setVisibility(View.GONE);
+                binding.endingTIme.setVisibility(View.GONE);
+
+            }
+
         }
 
         binding.doneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                getData();
+                
+                if (binding.doneBtn.getText().toString().equalsIgnoreCase("Offer Lift")){
+                    getData();
+                }else if (binding.doneBtn.getText().toString().equalsIgnoreCase("Share Location")){
+                    getData2();
+                }
+                
             }
         });
 
@@ -141,6 +153,120 @@ public class ShareCabActivity extends AppCompatActivity implements DatePickerDia
         });
 
     }
+
+    private void getData2() {
+        
+        startingAddress = binding.edStartingAddress.getText().toString().trim();
+        endingAddress = binding.endingAddress.getText().toString().trim();
+        
+        if (startingAddress.length() < 3){
+            Toast.makeText(context, "enter proper starting address", Toast.LENGTH_SHORT).show();
+        }else if (endingAddress.length() < 3){
+            Toast.makeText(context, "enter proper ending address", Toast.LENGTH_SHORT).show();
+        }else {
+            requestLocation1();
+        }
+        
+    }
+
+    private void requestLocation1() {
+
+        try {
+            if (locationPermissionGranted) {
+                Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+                locationResult.addOnCompleteListener((Activity) context, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                            // Set the map's camera position to the current location of the device.
+                            lastKnownLocation = task.getResult();
+                            if (lastKnownLocation != null) {
+
+                                if (cameraCheck) {
+
+                                }else {
+                                    marker.remove();
+                                }
+
+                                Latitude = lastKnownLocation.getLatitude();
+                                Longitude = lastKnownLocation.getLongitude();
+
+                                if (Latitude != null && Longitude != null){
+                                    updateLocation1(String.valueOf(Latitude), String.valueOf(Longitude));
+                                    common.showProgressDialog(context, "please wait...");
+                                }else {
+
+                                    if (COUNTER < 10){
+                                        requestLocation();
+                                        COUNTER++;
+                                    }else {
+                                        Toast.makeText(context, "can't get location check permission and GPS", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+
+                                }
+
+
+
+                            }else {
+
+                                if (COUNTER < 10){
+                                    requestLocation();
+                                    COUNTER++;
+                                }else {
+                                    Toast.makeText(context, "cab shared without location update", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
+
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage(), e);
+        }
+
+
+    }
+
+    private void updateLocation1(String Latitude, String Longitude) {
+
+        StringRequest request = new StringRequest(Request.Method.POST, addLocationApi,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(context, response, Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                finish();
+                Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<>();
+
+                map.put("username", common.getUserName(context));
+                map.put("starting_address", startingAddress);
+                map.put("ending_address", endingAddress);
+                map.put("latitude", Latitude);
+                map.put("longitude", Longitude);
+                map.put("status", common.activeCab);
+
+                return map;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(request);
+        
+    }
+
 
     private void getCabDetails() {
 

@@ -2,6 +2,7 @@ package com.codinglegend.legendsp.cabme.fragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
@@ -24,8 +25,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.codinglegend.legendsp.cabme.R;
+import com.codinglegend.legendsp.cabme.activities.ChatsActivity;
 import com.codinglegend.legendsp.cabme.activity_book_now;
 import com.codinglegend.legendsp.cabme.common;
+import com.codinglegend.legendsp.cabme.databinding.FragmentMapsBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -49,6 +52,7 @@ import java.util.Map;
 
 public class MapsFragment extends Fragment{
 
+    private FragmentMapsBinding binding;
     private Context context;
 
     View view;
@@ -65,12 +69,14 @@ public class MapsFragment extends Fragment{
 
     String fetchNearCabs = common.getBaseUrl() + "FetchNearCabs.php";
     String fetchCabOwner = common.getBaseUrl() + "FetchCabOwner.php";
+    String fetchNearCustomers = common.getBaseUrl() + "FetchNearCustomers.php";
 
     String latString = "", longString = "";
     String lat, longs;
     Boolean latBool = true, longBool = true;
     Boolean cabFetchCheck = true;
 
+    Boolean findCabActivityIs = true;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -123,8 +129,15 @@ public class MapsFragment extends Fragment{
 
                     if (!clickMarker.getTitle().equalsIgnoreCase("My Location")) {
 
-                        startActivity(new Intent(context, activity_book_now.class)
-                                .putExtra("cabId", clickMarker.getSnippet()));
+                        if (findCabActivityIs){
+                            startActivity(new Intent(context, activity_book_now.class)
+                                    .putExtra("cabId", clickMarker.getSnippet()));
+                        }else {
+                            startActivity(new Intent(context, ChatsActivity.class)
+                                    .putExtra("username", clickMarker.getTitle()));
+                        }
+
+
                     }
                     return false;
                 }
@@ -281,7 +294,6 @@ public class MapsFragment extends Fragment{
                                         Double lat = Double.valueOf(object.getString("latitude"));
                                         Double longs = Double.valueOf(object.getString("longitude"));
 
-
                                         fetchDetailFromCabId(object.getString("cab_id"), lat, longs);
 
                                     }
@@ -340,14 +352,37 @@ public class MapsFragment extends Fragment{
 
                                     LatLng latLng = new LatLng(lat, longs);
 
-                                    MarkerOptions options = new MarkerOptions();
-                                    options.position(latLng);
-                                    options.title(cabOwner);
-                                    options.snippet(cab_id);
-                                    options.icon(BitmapDescriptorFactory.fromResource(R.drawable.car2));
+                                    if (object.getString("vehical_type").equalsIgnoreCase(common.car)) {
 
-                                    Marker marker1 = map.addMarker(options);
-                                    marker1.showInfoWindow();
+                                        MarkerOptions options = new MarkerOptions();
+                                        options.position(latLng);
+                                        options.title(cabOwner);
+                                        options.snippet(cab_id);
+                                        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.car2));
+
+                                        Marker marker1 = map.addMarker(options);
+                                        marker1.showInfoWindow();
+                                    }else if (object.getString("vehical_type").equalsIgnoreCase(common.bike)) {
+
+                                        MarkerOptions options = new MarkerOptions();
+                                        options.position(latLng);
+                                        options.title(cabOwner);
+                                        options.snippet(cab_id);
+                                        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.bike));
+
+                                        Marker marker1 = map.addMarker(options);
+                                        marker1.showInfoWindow();
+                                    }else if (object.getString("vehical_type").equalsIgnoreCase(common.auto)) {
+
+                                        MarkerOptions options = new MarkerOptions();
+                                        options.position(latLng);
+                                        options.title(cabOwner);
+                                        options.snippet(cab_id);
+                                        options.icon(BitmapDescriptorFactory.fromResource(R.drawable.rickshaw));
+
+                                        Marker marker1 = map.addMarker(options);
+                                        marker1.showInfoWindow();
+                                    }
 
 
                                 }
@@ -386,14 +421,109 @@ public class MapsFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        view =  inflater.inflate(R.layout.fragment_maps, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_maps, container, false);
+        view = binding.getRoot();
         context = view.getContext();
 
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
 
+        binding.cabCustomerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (binding.cabCustomerBtn.getText().toString().equalsIgnoreCase("find customer")){
+                    Toast.makeText(context, "finding customers", Toast.LENGTH_SHORT).show();
+                    findCabActivityIs = false;
+                    binding.cabCustomerBtn.setText("find cabs");
+                    map.clear();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            fetchNearCustomers();
+                        }
+                    }, 500);
+                }else {
+                    cabFetchCheck = true;
+                    Toast.makeText(context, "finding cabs", Toast.LENGTH_SHORT).show();
+                    findCabActivityIs = true;
+                    binding.cabCustomerBtn.setText("find customer");
+                    map.clear();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            fetchNearCabs();
+                        }
+                    }, 2000);
+                }
+
+            }
+        });
+        
         return view;
         
+    }
+
+    private void fetchNearCustomers() {
+
+        StringRequest request = new StringRequest(Request.Method.POST, fetchNearCustomers,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        try {
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            String success = jsonObject.getString("success");
+
+                            if (success.equalsIgnoreCase("1")){
+
+                                for (int i=0; i<jsonArray.length(); i++){
+
+                                    JSONObject object = jsonArray.getJSONObject(i);
+
+                                    LatLng latLng = new LatLng(Double.valueOf(object.getString("latitude")), Double.valueOf(object.getString("longitude")));
+
+                                    MarkerOptions options = new MarkerOptions();
+                                    options.position(latLng);
+                                    options.title(object.getString("username"));
+                                    options.snippet(object.getString("ending_address"));
+                                    options.icon(BitmapDescriptorFactory.fromResource(R.drawable.person));
+
+                                    Marker marker1 = map.addMarker(options);
+                                    marker1.showInfoWindow();
+
+                                }
+
+                            }
+
+                        } catch (JSONException e) {
+                            Toast.makeText(context, "format error", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "connection error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<>();
+
+                map.put("latitude", latString);
+                map.put("longitude", longString);
+
+                return map;
+            }
+        };
+
+        RequestQueue queue = Volley.newRequestQueue(context);
+        queue.add(request);
+
     }
 
     @Override

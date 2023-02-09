@@ -140,6 +140,14 @@ View view;
                 }
             }
         });
+
+        binding.shareLocationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(context, ShareCabActivity.class).putExtra("from", "shareLocation"));
+            }
+        });
+
         return view;
     }
 
@@ -209,13 +217,13 @@ View view;
 
         } else {
 
-            if (binding.shareCabBtn.getText().toString().equalsIgnoreCase("share a cab")) {
-                startActivity(new Intent(context, ShareCabActivity.class));
+            if (binding.shareCabBtn.getText().toString().equalsIgnoreCase("Offer Lift")) {
+                startActivity(new Intent(context, ShareCabActivity.class).putExtra("from", "shareCab"));
                 binding.shareCabBtn.setText("refress");
                 cabList.clear();
                 cabAdapter.notifyDataSetChanged();
             } else {
-                binding.shareCabBtn.setText("share a cab");
+                binding.shareCabBtn.setText("Offer Lift");
                 getCabs();
             }
 

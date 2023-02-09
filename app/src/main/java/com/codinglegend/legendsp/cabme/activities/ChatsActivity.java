@@ -71,6 +71,10 @@ public class ChatsActivity extends AppCompatActivity {
 
         fetchUserData(userName);
 
+        if (userName.equalsIgnoreCase(common.getUserName(context))){
+            finish();
+        }
+
 
         recyclerView = findViewById(R.id.recyclerView);
         linearLayoutManager = new LinearLayoutManager(this);

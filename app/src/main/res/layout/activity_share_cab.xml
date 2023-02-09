@@ -162,6 +162,7 @@
 <!--        android:layout_margin="15dp">-->
 
         <LinearLayout
+            android:id="@+id/startingTIme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -208,6 +209,7 @@
 <!--        android:layout_margin="15dp">-->
 
         <LinearLayout
+            android:id="@+id/endingTIme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -254,6 +256,7 @@
 <!--        android:layout_margin="15dp">-->
 
         <LinearLayout
+            android:id="@+id/cabDetials"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
